@@ -4,9 +4,14 @@ import os
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
+from time import sleep
 
 THRESHOLD = 5 #5cms from sensor is when the bin is full
 ### Sensor on PIN 23 & 24
+
+gp.setmode(gp.BCM)
+gp.setup(23, gp.OUT)
+gp.setup(24, gp.IN)
 
 def soundSensor():
 	while True:
@@ -23,7 +28,7 @@ def soundSensor():
 		pulseDur = pulseEnd - pulseStart
 		dist = pulseDur * 17150
 		dist = round(dist, 2)
-
+		print dist
 		return dist
 
 if __name__ == '__main__':
@@ -43,7 +48,8 @@ if __name__ == '__main__':
 
 	while True:
 		dist = soundSensor()
-		os.system("fswebcam -S 30 image.jpg")
+		os.system("fswebcam -S 30 --no-banner image.jpg")
+		sleep(5)
 		'''CLarifai in the following lines'''
 		#image = ClImage(file_obj=open('image.jpg', 'rb'))
 		#tags = model.predict([image])
