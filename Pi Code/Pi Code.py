@@ -1,6 +1,8 @@
 import logging, time, smtplib
 import RPi.GPIO as gp
 import os
+import requests
+import json
 from dropbox import Dropbox
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
@@ -8,6 +10,7 @@ from clarifai.rest import Image as ClImage
 from time import sleep
 from pickle import load, dump
 from datetime.datetime import now
+from uuid import getnode as get_mac
 
 ### Sensor on PIN 23 & 24
 
@@ -33,6 +36,7 @@ def soundSensor():
 		# print dist
 		return dist
 
+
 if __name__ == '__main__':
 	app = ClarifaiApp(api_key='c0c92d06f75d4ed5a067630dafface26') #clarifai API
 	dbx = dropbox('CYUdRtzfjvAAAAAAAAAAFwaSXZUo4_2S_-jWgKO7wf3Gkd9OrdiL67hf97oHTJ3I') #Dropbox
@@ -53,13 +57,13 @@ if __name__ == '__main__':
 		config_dict = load(open('config.p', 'rb'))
 	else:
 		init_dist = soundSensor()
-		#location_lat, location_long = get_location()
+		location_lat, location_long = get_location()
 		config_dict = dict()
-		U_ID = api.getID() #bholagabbar
+		U_ID = get_mac() #bholagabbar
 		config_dict.update({"DEPTH":init_dist})
 		config_dict.update({"LAT":location_lat})
 		config_dict.update({"LONG":location_long})
-		dump(open('config.p', 'wb'), config_dict)
+		dump(config_dict, open('config.p', 'wb'))
 
 	#Logging purposes
 	logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
