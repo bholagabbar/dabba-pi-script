@@ -83,7 +83,7 @@ if __name__ == '__main__':
 		#image = ClImage(file_obj=open('image.jpg', 'rb'))
 		#tags = model.predict([image])
 		#add tags to dict_to_API
-		dbx.files_upload(open(image_name, 'rb').read(), '/'+image_name)
+		dbx.files_upload(open("image.jpg", 'rb').read(), '/'+image_name)
 		DROPBOX_URL = str(dbx.sharing_create_shared_link().url)
 		dict_to_API.update({"URL":DROPBOX_URL})
 		api.send_data(dict_to_API)
