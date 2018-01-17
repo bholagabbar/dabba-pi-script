@@ -5,8 +5,9 @@ from clarifai import rest
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
 from time import sleep
+from pickle import load, dump
+from datetime.datetime import now
 
-THRESHOLD = 5 #5cms from sensor is when the bin is full
 ### Sensor on PIN 23 & 24
 
 gp.setmode(gp.BCM)
@@ -28,7 +29,7 @@ def soundSensor():
 		pulseDur = pulseEnd - pulseStart
 		dist = pulseDur * 17150
 		dist = round(dist, 2)
-		print dist
+		# print dist
 		return dist
 
 if __name__ == '__main__':
@@ -43,14 +44,34 @@ if __name__ == '__main__':
 	gp.setup(24, gp.IN)
 	gp.setwarnings(False)
 
+	if os.path.isfile('config.p'):
+		config_dict = load(open('config.p', 'rb'))
+	else:
+		init_dist = soundSensor()
+		#location_lat, location_long = get_location()
+		config_dict = dict()
+		U_ID = api.getID() #bholagabbar
+		config_dict.update({"DEPTH":init_dist})
+		config_dict.update({"LAT":location_lat})
+		config_dict.update({"LONG":location_long})
+		dump(open('config.p', 'wb'), config_dict)
+
 	logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 					level=logging.INFO)
-
+	
+	dict_to_API = dict()
+	dict_to_API.update({"U_ID":config_dict["U_ID"]}) #dynamic ID or sth
 	while True:
+
 		dist = soundSensor()
 		os.system("fswebcam -S 30 --no-banner image.jpg")
-		sleep(5)
+		sleep(5) #Maybe 30 secs?
+		dict_to_API.update({"LEVEL":config_dict['DEPTH'] - dist})
+		dict_to_API.update({"TIMESTAMP":str(now())})
+		
 		'''CLarifai in the following lines'''
 		#image = ClImage(file_obj=open('image.jpg', 'rb'))
 		#tags = model.predict([image])
-		#API call goes here
+		#add tags to dict_to_API
+		#dropbox integration
+		api.send_data(dict_to_API)
