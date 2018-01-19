@@ -1,4 +1,3 @@
-import logging, time, smtplib
 import RPi.GPIO as gp
 import os
 import requests
@@ -7,10 +6,11 @@ from dropbox import Dropbox
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
-from time import sleep
+from time import sleep, time
 from pickle import load, dump
 from datetime.datetime import now
 from uuid import getnode as get_mac
+from multiprocessing import Process
 
 #Custom Modules
 
@@ -32,21 +32,18 @@ if __name__ == '__main__':
 	gp.setwarnings(False)
 
 	#Config Files
-	if os.path.isfile('config.p'):
-		config_dict = load(open('config.p', 'rb'))
-	else:
-		init_dist = sound_sensor(time)
-		location_lat, location_long = get_location()
-		config_dict = dict()
-		U_ID = get_mac()
-		config_dict.update({"DEPTH":init_dist})
-		config_dict.update({"LAT":location_lat})
-		config_dict.update({"LONG":location_long})
-		dump(config_dict, open('config.p', 'wb'))
+	while not os.path.isfile('config.p'):
+		continue
 
-	#Logging purposes
-	logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-					level=logging.INFO)
+	sleep(5)
+	config_dict = load(open('config.p', 'rb'))
+	
+	init_dist = sound_sensor(time)
+	config_dict = dict()
+	U_ID = get_mac()
+	config_dict.update({"U_ID":U_ID})
+	config_dict.update({"DEPTH":init_dist})
+	dump(config_dict, open('config.p', 'wb'))
 
 	#Dict_to_API used to send API requests
 	dict_to_API = dict()

@@ -1,38 +1,59 @@
 import telebot
 from telebot import types
 import json
-import pickle
-bot = telebot.TeleBot("251903620:AAGQSJErICuLtrEEx_Enm90pyv-KpCNCbP0")
+from pickle import load, dump
+import os
 
-text = pickle.load(open('text.txt', 'rb'))
+text = load(open('text.txt', 'rb'))
 
 markup = types.ReplyKeyboardMarkup()
-itembtna = types.KeyboardButton('/start')
-itembtnv = types.KeyboardButton('/location')
-itembtnc = types.KeyboardButton('/reset')
-itembtnd = types.KeyboardButton('/status')
-markup.row(itembtna, itembtnv)
-markup.row(itembtnc, itembtnd)
+start = types.KeyboardButton('/start')
+location = types.KeyboardButton('/location')
+reset = types.KeyboardButton('/reset')
+status = types.KeyboardButton('/status')
+markup.row(start, location)
+markup.row(reset, status)
 
-@bot.message_handler(commands=['start'])
-def first_start(message):
-	bot.reply_to(message, text['start'], reply_markup=markup)
+token = "251903620:AAGQSJErICuLtrEEx_Enm90pyv-KpCNCbP0"
 
-@bot.message_handler(commands=['location'])
-def first_start(message):
-	bot.reply_to(message, text['location_request'])
+bot = telebot.TeleBot(token)
+async_bot = telebot.AsyncTeleBot(token)
+config_dict = dict()
 
-@bot.message_handler(commands=['reset'])
-def first_start(message):
-	bot.reply_to(message, text['reset'], reply_markup=markup)
+class telegram:
+	
+	def __init__(self): #add Boolean variable, MAC ID of Pi, OR SERVER SIDE CODE???
+		if os.path.isfile('config.p'):
+			config_dict = load(open('config.p', 'rb'))
 
-@bot.message_handler(commands=['status'])
-def first_start(message):
-	bot.reply_to(message, text['status'], reply_markup=markup)
+	@bot.message_handler(commands=['start'])
+	def first_start(message):
+		config_dict.update({"C_ID":message.from_user.id})
+		bot.reply_to(message, text['start'], reply_markup=markup)
+		# dump(message, open('message.p', 'wb'))
 
-@bot.message_handler(content_types=['location'])
-def get_location(message):
-	lat, lon = message.location.latitude, message.location.longitude
-	bot.reply_to(message, text['location_received'].format(lat, lon))
+	def send_message(self, chat_id, message):
+		async_bot.send_message(chat_id, message)
 
-bot.polling()
+	@bot.message_handler(commands=['location'])
+	def location_request(message):
+		bot.reply_to(message, text['location_request'])
+
+	@bot.message_handler(commands=['reset'])
+	def reset(message):
+		bot.reply_to(message, text['reset'])
+
+	@bot.message_handler(commands=['status'])
+	def status(message):
+		bot.reply_to(message, text['status'])
+
+	@bot.message_handler(content_types=['location'])
+	def get_location(message):
+		location_lat, location_long = message.location.latitude, message.location.longitude
+		config_dict.update({"LAT":location_lat})
+		config_dict.update({"LONG":location_long})
+		dump(config_dict, open('config.p', 'wb'))
+		bot.reply_to(message, text['location_received'].format(location_lat, location_long))
+
+	def poll(self):
+		bot.polling()
