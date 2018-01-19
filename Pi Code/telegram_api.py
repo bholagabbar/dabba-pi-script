@@ -14,7 +14,7 @@ status = types.KeyboardButton('/status')
 markup.row(start, location)
 markup.row(reset, status)
 
-token = "251903620:AAGQSJErICuLtrEEx_Enm90pyv-KpCNCbP0"
+token = "506400947:AAFaKrX-EFVhM-O1e6rV5XyWMzVWtMB1Wdo"
 
 bot = telebot.TeleBot(token)
 async_bot = telebot.AsyncTeleBot(token)
@@ -56,4 +56,4 @@ class telegram:
 		bot.reply_to(message, text['location_received'].format(location_lat, location_long))
 
 	def poll(self):
-		bot.polling()
+		bot.polling(none_stop=True)
