@@ -2,13 +2,13 @@ import RPi.GPIO as gp
 import os
 import requests
 import json
+import datetime
 from dropbox import Dropbox
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
 from time import sleep, time
 from pickle import load, dump
-from datetime.datetime import now
 from uuid import getnode as get_mac
 from multiprocessing import Process
 
@@ -23,8 +23,8 @@ from clarifai_module import get_tags
 class Pi:
 	def __init__ (self):
 		self.app = ClarifaiApp(api_key='c0c92d06f75d4ed5a067630dafface26') #clarifai API
-		self.dbx = dropbox('CYUdRtzfjvAAAAAAAAAAFwaSXZUo4_2S_-jWgKO7wf3Gkd9OrdiL67hf97oHTJ3I') #Dropbox
-		self.model = app.models.get('general-v1.3') #Use Custom Model?
+		self.dbx = Dropbox('CYUdRtzfjvAAAAAAAAAAFwaSXZUo4_2S_-jWgKO7wf3Gkd9OrdiL67hf97oHTJ3I') #Dropbox
+		self.model = self.app.models.get('general-v1.3') #Use Custom Model?
 
 	#GPIO for SONAR Sensor
 		gp.setmode(gp.BCM)
@@ -57,7 +57,7 @@ class Pi:
 		while True:
 
 			dist = sound_sensor(time)
-			image_name = self.dict_to_API["U_ID"] + "_" + str(now()) + '.jpg'
+			image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
 		
 			os.system("fswebcam -S 30 --no-banner image.jpg")
 			sleep(5) #Maybe 30 secs? CHANGE TO 15 for review
@@ -66,7 +66,7 @@ class Pi:
 			self.dict_to_API.update({"TIMESTAMP":str(now())})
 			
 			tags = get_tags(ClImage, self.model, 'image.jpg')
-			self.dict_to_API.update({"TAGS:"tags})
+			self.dict_to_API.update({"TAGS":tags})
 
 			DROPBOX_URL = upload(self.dbx, "image.jpg", image_name)
 			self.dict_to_API.update({"URL":DROPBOX_URL})
