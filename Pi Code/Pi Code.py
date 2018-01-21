@@ -40,7 +40,7 @@ if __name__ == '__main__':
 	
 	init_dist = sound_sensor(time)
 	config_dict = dict()
-	U_ID = get_mac()
+	U_ID = str(get_mac())
 	config_dict.update({"U_ID":U_ID})
 	config_dict.update({"DEPTH":init_dist})
 	dump(config_dict, open('config.p', 'wb'))

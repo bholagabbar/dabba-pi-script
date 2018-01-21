@@ -20,7 +20,7 @@ bot = telebot.TeleBot(token)
 async_bot = telebot.AsyncTeleBot(token)
 config_dict = dict()
 
-class telegram:
+class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
 	
 	def __init__(self): #add Boolean variable, MAC ID of Pi, OR SERVER SIDE CODE???
 		if os.path.isfile('config.p'):
