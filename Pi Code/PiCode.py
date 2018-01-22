@@ -67,9 +67,11 @@ class Pi:
 			self.dict_to_API.update({"LEVEL":self.config_dict['DEPTH'] - dist})
 			self.dict_to_API.update({"TIMESTAMP":str(datetime.datetime.now())})
 			
+			print "Getting Tags (Experimantal)"			
 			tags = get_tags(ClImage, self.model, 'image.jpg')
 			self.dict_to_API.update({"TAGS":tags})
 
+			print "Uploading Image"
 			DROPBOX_URL = upload(self.dbx, "image.jpg", image_name)
 			self.dict_to_API.update({"URL":DROPBOX_URL})
 
