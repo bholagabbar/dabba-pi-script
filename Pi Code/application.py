@@ -13,7 +13,9 @@ if __name__ == '__main__':
 	pi = pc.Pi()
 
 	proc_1 = Process(target=pi.loop)
-	proc_2 = Process(target=telegram.poll)
+
+	# proc_2 = Process(target=telegram.poll)
 
 	proc_1.start()
-	proc_2.start()
+	# proc_2.start()
+	telegram.poll()
