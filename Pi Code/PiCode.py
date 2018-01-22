@@ -63,7 +63,7 @@ class Pi:
 			sleep(5) #Maybe 30 secs? CHANGE TO 15 for review
 			
 			self.dict_to_API.update({"LEVEL":self.config_dict['DEPTH'] - dist})
-			self.dict_to_API.update({"TIMESTAMP":str(now())})
+			self.dict_to_API.update({"TIMESTAMP":str(datetime.datetime.now())})
 			
 			tags = get_tags(ClImage, self.model, 'image.jpg')
 			self.dict_to_API.update({"TAGS":tags})
