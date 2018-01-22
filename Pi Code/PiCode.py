@@ -33,7 +33,11 @@ class Pi:
 		gp.setwarnings(False)
 
 	#Config Files
+		flag = False
 		while not os.path.isfile('config.p'):
+			if not flag:
+				print "Config file not found. Please configure."
+				flag = True
 			continue
 
 		sleep(5)
