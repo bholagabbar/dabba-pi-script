@@ -55,11 +55,13 @@ class Pi:
 
 	def loop(self):
 		while True:
-
+			print "Recording Distance"
 			dist = sound_sensor()
 			image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
-		
-			os.system("fswebcam -S 30 --no-banner image.jpg")
+			print "Capturing Image"
+			os.system("fswebcam -S 30 --no-banner -q image.jpg")
+
+			print "Sleeping for 5 seconds"
 			sleep(5) #Maybe 30 secs? CHANGE TO 15 for review
 			
 			self.dict_to_API.update({"LEVEL":self.config_dict['DEPTH'] - dist})
@@ -70,5 +72,10 @@ class Pi:
 
 			DROPBOX_URL = upload(self.dbx, "image.jpg", image_name)
 			self.dict_to_API.update({"URL":DROPBOX_URL})
+
+			print "Distance: {} cms".format(dist)
+			print "Dropbox URL: {}".format(DROPBOX_URL)
+			print ""
+			print ""
 
 			# api.send_data(self.dict_to_API)
