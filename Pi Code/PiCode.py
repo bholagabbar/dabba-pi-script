@@ -47,9 +47,9 @@ class Pi:
 
 		#Dict_to_API used to send API requests
 		self.dict_to_API = dict()
-		self.dict_to_API.update({"U_ID":config_dict["U_ID"]})
-		self.dict_to_API.update({"LAT":config_dict["LAT"]})
-		self.dict_to_API.update({"LONG":config_dict["LONG"]})
+		self.dict_to_API.update({"U_ID":self.config_dict["U_ID"]})
+		self.dict_to_API.update({"LAT":self.config_dict["LAT"]})
+		self.dict_to_API.update({"LONG":self.config_dict["LONG"]})
 		
 	#Main Loop, iterated every 15 seconds
 
