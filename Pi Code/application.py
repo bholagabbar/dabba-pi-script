@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
 	lock = Lock()
 	distance = Value('d', 0.0)
-	URL = Value('s')
+	# URL = Value('s')
 
 	telegram = ta.telegram()
 	pi = pc.Pi()
