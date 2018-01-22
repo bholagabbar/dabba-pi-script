@@ -10,14 +10,14 @@ if __name__ == '__main__':
 	# URL = Value('s')
 
 	telegram = ta.telegram()
-	telegram.poll()
+	# telegram.poll()
+	proc_2 = Process(target=telegram.poll)
 
+	
+	proc_2.start()
 
 	pi = pc.Pi()
 	proc_1 = Process(target=pi.loop)
 	proc_1.start()
 	
-	# proc_2 = Process(target=telegram.poll)
 
-	
-	# proc_2.start()
