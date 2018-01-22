@@ -56,4 +56,5 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
 		bot.reply_to(message, text['location_received'].format(location_lat, location_long))
 
 	def poll(self):
+		print "Telegram API Running"
 		bot.polling(none_stop=True)
