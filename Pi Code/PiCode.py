@@ -41,8 +41,8 @@ class Pi:
 	
 		self.init_dist = sound_sensor()
 		self.U_ID = str(get_mac())
-		self.config_dict.update({"U_ID":U_ID})
-		self.config_dict.update({"DEPTH":init_dist})
+		self.config_dict.update({"U_ID":self.U_ID})
+		self.config_dict.update({"DEPTH":self.init_dist})
 		dump(self.config_dict, open('config.p', 'wb'))
 
 		#Dict_to_API used to send API requests
