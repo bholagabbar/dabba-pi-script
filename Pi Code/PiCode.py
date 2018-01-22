@@ -7,7 +7,7 @@ from dropbox import Dropbox
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
-from time import sleep, time
+from time import sleep
 from pickle import load, dump
 from uuid import getnode as get_mac
 from multiprocessing import Process
@@ -39,7 +39,7 @@ class Pi:
 		sleep(5)
 		self.config_dict = load(open('config.p', 'rb'))
 	
-		self.init_dist = sound_sensor(time)
+		self.init_dist = sound_sensor()
 		self.U_ID = str(get_mac())
 		self.config_dict.update({"U_ID":U_ID})
 		self.config_dict.update({"DEPTH":init_dist})
@@ -56,7 +56,7 @@ class Pi:
 	def loop(self):
 		while True:
 
-			dist = sound_sensor(time)
+			dist = sound_sensor()
 			image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
 		
 			os.system("fswebcam -S 30 --no-banner image.jpg")
