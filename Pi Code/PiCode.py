@@ -33,6 +33,11 @@ class Pi:
 		gp.setwarnings(False)
 
 	#Config Files
+
+		
+	#Main Loop, iterated every 15 seconds
+
+	def loop(self):
 		flag = False
 		while not os.path.isfile('config.p'):
 			if not flag:
@@ -55,9 +60,6 @@ class Pi:
 		self.dict_to_API.update({"LAT":self.config_dict["LAT"]})
 		self.dict_to_API.update({"LONG":self.config_dict["LONG"]})
 		
-	#Main Loop, iterated every 15 seconds
-
-	def loop(self):
 		while True:
 			print "Recording Distance"
 			dist = sound_sensor()
