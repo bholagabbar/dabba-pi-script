@@ -13,8 +13,6 @@ from uuid import getnode as get_mac
 from multiprocessing import Process
 
 #Custom Modules
-
-import telegram_api
 from sonar_module import sound_sensor
 from dropbox_module import upload
 from clarifai_module import get_tags
@@ -39,9 +37,9 @@ class Pi:
 
 	def loop(self):
 		flag = False
-		while not os.path.isfile('config.p'):
+		while not True: ##CHANGE THIS. Add api.checkAuthentication(str(get_mac()))
 			if not flag:
-				print "Config file not found. Please configure."
+				print "Please configure before using."
 				flag = True
 			continue
 
@@ -81,8 +79,9 @@ class Pi:
 			DROPBOX_URL = upload(self.dbx, "image.jpg", image_name)
 			self.dict_to_API.update({"URL":DROPBOX_URL})
 
-			print "Distance: {} cms".format(dist)
-			print "Dropbox URL: {}".format(DROPBOX_URL)
+			# print "Distance: {} cms".format(dist)
+			# print "Dropbox URL: {}".format(DROPBOX_URL)
+			print self.dict_to_API
 			print ""
 			print ""
 
