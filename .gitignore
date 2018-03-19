@@ -10,3 +10,4 @@ ehthumbs.db
 *.pyc
 *.ipyb_checkpoints
 *venv*
+*.json
