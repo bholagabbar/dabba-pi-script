@@ -18,7 +18,7 @@ Pi Code for FYP
 * #### Running The App
 * `python application.py` 
 
-* ####GCP API
+* #### GCP API
 * Enable the vision API
 * Create a bucket
 * Download the config json from GCP
