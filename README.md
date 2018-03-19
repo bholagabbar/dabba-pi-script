@@ -17,3 +17,10 @@ Pi Code for FYP
 
 * #### Running The App
 * `python application.py` 
+
+* ####GCP API
+* Enable the vision API
+* Create a bucket
+* Download the config json from GCP
+* Run the following command
+* `export GOOGLE_APPLICATION_CREDENTIALS=[path-to-config]`
