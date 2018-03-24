@@ -6,7 +6,7 @@
 * [Python 2.7](https://www.python.org/download/releases/2.7/)
 * *virtualenv* - `pip install virtualenv`
 
-* #### First Time Setup
+* ### First Time Setup
 * `git clone https://github.com/dabba-fyp/dabba-pi-server`
 * `cd dabba-pi-server`
 * `virtualenv venv`
@@ -14,7 +14,7 @@
 * `sudo pip install -r requirements.txt`
 
 
-* #### Running The App
+* ### Running The App
 * `python application.py` 
 
 * #### GCP API
@@ -24,14 +24,14 @@
 * Run the following command
 * `export GOOGLE_APPLICATION_CREDENTIALS=[path-to-config]`
 
-#Telegram Code
+# Telegram Code
 
 * You need a Telegram App to use this module
 
-#### Running The App
+### Running The App
 * `python telegram_main.py`
 
-####Sending Asynch Messages
+### Sending Asynch Messages
 
 You can send asynchronous messages to any user in the Telegram App.
 
