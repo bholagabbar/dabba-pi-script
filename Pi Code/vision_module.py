@@ -8,4 +8,8 @@ def get_tags(client, types, image):
 
 	response = client.label_detection(image=image)
 	labels = response.label_annotations
-	return labels
+	temp = []
+	for label in labels:
+		if label.score > 0.5:
+			temp.append(label.description)
+	return temp
