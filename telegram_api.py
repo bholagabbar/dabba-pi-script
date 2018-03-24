@@ -1,3 +1,4 @@
+import json
 import os
 from pickle import load
 
@@ -11,7 +12,7 @@ with open('config.json', 'r') as json_config_file:
 for k, v in configFile.iteritems():
     os.environ[k] = v
 
-client = MongoClient()
+client = MongoClient(host=os.environ['HOST'], port=int(os.environ['PORT']), username=os.environ['USER'], password=os.environ['PASS'])
 db = client.telegram_db
 text = load(open('text.txt', 'rb'))
 

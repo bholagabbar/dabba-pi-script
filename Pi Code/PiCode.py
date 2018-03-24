@@ -92,4 +92,4 @@ class Pi:
 			print ""
 			print ""
 			i = (i + 1) % 2
-			# api.send_data(self.dict_to_API)
+			# api.send_data(json.dumps(self.dict_to_API))
