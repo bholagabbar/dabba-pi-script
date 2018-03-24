@@ -94,11 +94,11 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
                 posts.update_one({'C_ID': str(message.from_user.id)}, {"$set": {"LONG": location_long}})
                 # dump(config_dict, open('config.p', 'wb'))
 				bot.reply_to(message, text['location_received'].format(location_lat, location_long))
-        else:
-        bot.reply_to(message, "Error")
+            else:
+                bot.reply_to(message, "Error")
 
-except:
-bot.reply_to(message, "Error")
+        except:
+            bot.reply_to(message, "Error")
 
 
 def poll(self):
