@@ -13,6 +13,7 @@ for k, v in configFile.iteritems():
     os.environ[k] = v
 
 client = MongoClient(host=os.environ['HOST'], port=int(os.environ['PORT']), username=os.environ['USER'], password=os.environ['PASS'])
+# client = MongoClient()
 db = client.telegram_db
 text = load(open('text.txt', 'rb'))
 
@@ -74,7 +75,8 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
     def status(message):
         try:
             posts = db.posts
-            url = posts.find_one({"C_ID": str(message.from_user.id)}).URL
+            print posts.find_one({"C_ID": str(message.from_user.id)})
+            url = posts.find_one({"C_ID": str(message.from_user.id)})['URL']
             bot.reply_to(message, str(url))
         except:
             bot.reply_to(message, "Error")
