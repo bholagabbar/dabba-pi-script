@@ -1,26 +1,21 @@
-import RPi.GPIO as gp
-import os
-import requests
-import json
 import datetime
-import io
-from dropbox import Dropbox
-from clarifai import rest
-from clarifai.rest import ClarifaiApp
-from clarifai.rest import Image as ClImage
+import os
+from pickle import dump
 from time import sleep
-from pickle import load, dump
 from uuid import getnode as get_mac
-from multiprocessing import Process
+
+import RPi.GPIO as gp
+from dropbox import Dropbox
 from google.cloud import vision
 from google.cloud.vision import types
 
-
-#Custom Modules
-from sonar_module import sound_sensor
 from dropbox_module import upload
-from vision_module import get_tags
 from pre_processing import pre_processing
+# Custom Modules
+from sonar_module import sound_sensor
+from vision_module import get_tags
+
+
 # from clarifai_module import get_tags
 
 
@@ -44,32 +39,28 @@ class Pi:
 	#Main Loop, iterated every 15 seconds
 
 	def loop(self):
-		flag = False
-		while not True: ##CHANGE THIS. Add api.checkAuthentication(str(get_mac()))
-			if not flag:
-				print "Please configure before using."
-				flag = True
-			continue
 
-		sleep(5)
-		self.config_dict = load(open('config.p', 'rb'))
-
+		#self.config_dict = load(open('config.p', 'rb'))
+		self.config_dict = dict()
 		self.init_dist = sound_sensor()
 		self.U_ID = str(get_mac())
 		self.config_dict.update({"U_ID":self.U_ID})
 		self.config_dict.update({"DEPTH":self.init_dist})
-		dump(self.config_dict, open('config.p', 'wb'))
+
 
 		while not api.confirm_authentication(self.U_ID):
 			pass
 
 		location = api.get_location(self.U_ID)
 		self.config_dict["LAT"], self.config_dict["LONG"] = location.split()[0], location.split[1]
+		self.config_dict["USER_NAME"] = api.get_username(self.U_ID)
+		dump(self.config_dict, open('config.p', 'wb'))
 		#Dict_to_API used to send API requests
 		self.dict_to_API = dict()
 		self.dict_to_API.update({"U_ID":self.config_dict["U_ID"]})
 		self.dict_to_API.update({"LAT":self.config_dict["LAT"]})
 		self.dict_to_API.update({"LONG":self.config_dict["LONG"]})
+		self.dict_to_API.update({"USER_NAME":self.config_dict["USER_NAME"]})
 
 		i = 0
 		while True:

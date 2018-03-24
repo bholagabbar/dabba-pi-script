@@ -31,10 +31,12 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
 
     @bot.message_handler(commands=['start'])
     def first_start(message):
+        print message
         posts = db.posts
         if posts.find_one({"C_ID": str(message.from_user.id)}) is None:
             config_dict.update({"C_ID": message.from_user.id})
             post = {"C_ID": str(message.from_user.id),
+                    "USER_NAME": str(message.from_user.username),
                     "U_ID": None,
                     "LAT": None,
                     "LONG": None,
@@ -101,6 +103,6 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
             bot.reply_to(message, "Error")
 
 
-def poll(self):
-    print "Telegram API Running"
-    bot.polling(none_stop=True)
+    def poll(self):
+        print "Telegram API Running"
+        bot.polling(none_stop=True)
