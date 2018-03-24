@@ -35,10 +35,12 @@
 
 You can send asynchronous messages to any user in the Telegram App.
 
-<b>Note:</b> The method will fail if the user data is not present in `telegram_db` document.
+<b>Note:</b> The method will fail if the user data is not present in `telegram_db` document.<br>
 <b>Note:</b> Make sure the telegram_api file is in the same directory.
 
-`from send_asynch_messages import send_message`<br>
-`send_message([USER_NAME], [MESSAGE])`
+```
+from send_asynch_messages import send_message
+send_message([USER_NAME], [MESSAGE])
+```
 
   
