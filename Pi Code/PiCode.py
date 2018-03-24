@@ -51,8 +51,8 @@ class Pi:
 		while not api.confirm_authentication(self.U_ID):
 			pass
 
-		location = api.get_location(self.U_ID)
-		self.config_dict["LAT"], self.config_dict["LONG"] = location.split()[0], location.split[1]
+		lat, lon = api.get_location(self.U_ID)
+		self.config_dict["LAT"], self.config_dict["LONG"] = lat, lon
 		self.config_dict["USER_NAME"] = api.get_username(self.U_ID)
 		dump(self.config_dict, open('config.p', 'wb'))
 		#Dict_to_API used to send API requests
