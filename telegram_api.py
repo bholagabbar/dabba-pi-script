@@ -1,9 +1,9 @@
-import telebot
-from telebot import types
-import json
-from pickle import load, dump
 import os
+from pickle import load
+
+import telebot
 from pymongo import MongoClient
+from telebot import types
 
 client = MongoClient()
 db = client.telegram_db
@@ -41,8 +41,10 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
 					"URL" :None}
 			posts.insert_one(post)
 			bot.reply_to(message, text['start'], reply_markup=markup)
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 		else:
 			bot.reply_to(message, "Hello", reply_markup=markup)
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 		# dump(message, open('message.p', 'wb'))
 
 	def send_message(self, chat_id, message):
@@ -58,8 +60,10 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
 			posts = db.posts
 			posts.delete_one({"C_ID":str(message.from_user.id)})
 			bot.reply_to(message, "Reset successfully")
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 		except:
 			bot.reply_to(message, "Error")
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 
 	@bot.message_handler(commands=['status'])
 	def status(message):
@@ -67,32 +71,43 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
 			posts = db.posts
 			url = posts.find_one({"C_ID":str(message.from_user.id)}).URL
 			bot.reply_to(message, text['status'])
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 		except:
 			bot.reply_to(message, "Error")
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 
 	@bot.message_handler(content_types=['text'])
 	def mac_ID(message):
 		try:
-			posts = db.posts
-			posts.update_one({'C_ID':str(message.from_user.id)}, {"$set":{'U_ID': str(message.text)}})
-			bot.reply_to(message, "MAC ID successfully set!")
+            if not db.posts.find_one({"C_ID": str(message.from_user.id)}) is None:
+                posts = db.posts
+                posts.update_one({'C_ID': str(message.from_user.id)}, {"$set": {'U_ID': str(message.text)}})
+                bot.reply_to(message, "MAC ID successfully set!")
+                print db.posts.find_one({"C_ID": str(message.from_user.id)})
+            else:
+                bot.reply_to(message, "Error")
+                print db.posts.find_one({"C_ID": str(message.from_user.id)})
 		except:
 			bot.reply_to(message, "Error")
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 
 	@bot.message_handler(content_types=['location'])
 	def get_location(message):
 		try:
-			if not db.posts.find_one({"C_ID":message.from_user.id}) is None:
+            if not db.posts.find_one({"C_ID": str(message.from_user.id)}) is None:
 				posts = db.posts
 				location_lat, location_long = message.location.latitude, message.location.longitude
 				posts.update_one({'C_ID':str(message.from_user.id)},{"$set":{"LAT":location_lat}})
 				posts.update_one({'C_ID':str(message.from_user.id)},{"$set":{"LONG":location_long}})
 				# dump(config_dict, open('config.p', 'wb'))
 				bot.reply_to(message, text['location_received'].format(location_lat, location_long))
+                print db.posts.find_one({"C_ID": str(message.from_user.id)})
 			else:
 				bot.reply_to(message, "Error")
+                print db.posts.find_one({"C_ID": str(message.from_user.id)})
 		except:
 			bot.reply_to(message, "Error")
+            print db.posts.find_one({"C_ID": str(message.from_user.id)})
 
 	def poll(self):
 		print "Telegram API Running"
