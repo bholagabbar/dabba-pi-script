@@ -5,6 +5,12 @@ import telebot
 from pymongo import MongoClient
 from telebot import types
 
+with open('config.json', 'r') as json_config_file:
+    configFile = json.load(json_config_file)
+
+for k, v in configFile.iteritems():
+    os.environ[k] = v
+
 client = MongoClient()
 db = client.telegram_db
 text = load(open('text.txt', 'rb'))
