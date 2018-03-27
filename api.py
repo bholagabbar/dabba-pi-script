@@ -22,7 +22,7 @@ def get_location(macID):
     telegram_db = client.telegram_db
     posts = telegram_db.posts
     lat = posts.find_one({"U_ID": str(macID)})['LAT']
-    lon = posts.find_one({"U_ID": str(macID)})['LON']
+    lon = posts.find_one({"U_ID": str(macID)})['LONG']
     client.close()
     return lat, lon
 
@@ -41,7 +41,7 @@ def confirm_authentication(macID):
     result = posts.find_one({"U_ID":str(macID)})
     client.close()
     try:
-        if (result['LAT'] is not None) and (result['LON'] is not None) and (result['TYPE'] is not None):
+        if (result['LAT'] is not None) and (result['LONG'] is not None) and (result['TYPE'] is not None):
             return False
         else:
             return True
