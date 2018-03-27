@@ -92,7 +92,10 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
                     and db.posts.find_one({"U_ID": str(int(mac_id))}) is None\
                     and db.posts.find_one({"C_ID": str(message.from_user.id)})["U_ID"] is None:
                 posts = db.posts
-                posts.update_one({"C_ID": str(message.from_user.id), "U_ID": None}, {"$set": {"U_ID":str(int(mac_id))}})
+                posts.update_one({"C_ID": str(message.from_user.id), "U_ID": None}, {"$set": {"U_ID":str(int(mac_id)), "TYPE":int(bin_type)}})
+                bot.reply_to(message,
+                             "MAC ID {} and bin type {} successfully set! Be sure to send your location again!".format(
+                                 mac_id, 'non biodegradable' if int(bin_type) else 'biodegradable'))
 
             elif db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(int(mac_id))}) is None \
                     and db.posts.find_one({"U_ID": str(int(mac_id))}) is None:
@@ -105,7 +108,9 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
                         "URL": None,
                         "TYPE": int(bin_type)}
                 posts.insert_one(post)
-                bot.reply_to(message, "MAC ID {} and bin type {} successfully set! Be sure to send your location again!".format(mac_id, 'non biodegradable' if bin_type else 'biodegradable'))
+                bot.reply_to(message, "MAC ID {} and bin type {} successfully set! Be sure to send your location again!".format(
+                    mac_id, 'non biodegradable' if int(bin_type) else 'biodegradable'))
+
                 for x in db.posts.find({"C_ID": str(message.from_user.id)}):
                     print x
 
