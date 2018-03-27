@@ -1,4 +1,3 @@
-import json
 import os
 from pickle import load
 
@@ -6,15 +5,15 @@ import telebot
 from pymongo import MongoClient
 from telebot import types
 
-with open('config.json', 'r') as json_config_file:
-    configFile = json.load(json_config_file)
+# with open('config.json', 'r') as json_config_file:
+    # configFile = json.load(json_config_file)
 
-for k, v in configFile.iteritems():
-    os.environ[k] = v
+# for k, v in configFile.iteritems():
+    # os.environ[k] = v
 
-client = MongoClient(host=os.environ['HOST'], port=int(os.environ['PORT']),
-                     username=os.environ['USER'], password=os.environ['PASS'])
-# client = MongoClient()
+# client = MongoClient(host=os.environ['HOST'], port=int(os.environ['PORT']),
+                     # username=os.environ['USER'], password=os.environ['PASS'])
+client = MongoClient()
 db = client.telegram_db
 text = load(open('text.txt', 'rb'))
 
@@ -49,7 +48,8 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
                     "U_ID": None,
                     "LAT": None,
                     "LONG": None,
-                    "URL": None}
+                    "URL": None,
+                    "TYPE":None}
             posts.insert_one(post)
             bot.reply_to(message, text['start'], reply_markup=markup)
         else:
@@ -85,16 +85,42 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
     @bot.message_handler(content_types=['text'])
     def mac_ID(message):
         try:
-            if not db.posts.find_one({"C_ID": str(message.from_user.id)}) is None:
+            [mac_id, bin_type] = message.text.split(' ')
+            if int(bin_type) not in [0,1]:
+                raise ValueError
+
+            if db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(int(mac_id))}) is None and db.posts.find_one({"U_ID": str(int(mac_id))}) is None:
                 posts = db.posts
-                posts.update_one({'C_ID': str(message.from_user.id)}, {"$set": {'U_ID': str(message.text)}})
-                bot.reply_to(message, "MAC ID successfully set!")
-                print db.posts.find_one({"C_ID": str(message.from_user.id)})
+                post = {"C_ID": str(message.from_user.id),
+                        "USER_NAME": str(message.from_user.username),
+                        "U_ID": str(int(mac_id)),
+                        "LAT": None,
+                        "LONG": None,
+                        "URL": None,
+                        "TYPE": int(bin_type)}
+                posts.insert_one(post)
+                bot.reply_to(message, "MAC ID {} and bin type {} successfully set! Be sure to send your location again!".format(mac_id, 'non biodegradable' if bin_type else 'biodegradable'))
+                for x in db.posts.find({"C_ID": str(message.from_user.id)}):
+                    print x
+
+            elif not db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(int(mac_id))}) is None:
+                posts = db.posts
+                posts.update_one({'C_ID': str(message.from_user.id), 'U_ID': str(int(mac_id))},
+                                 {"$set": {'TYPE': int(bin_type)}})
+                for x in db.posts.find({"C_ID": str(message.from_user.id)}):
+                    print x
+
+                if int(bin_type) == 0:
+                    bin_type = 'biodegradable'
+                else:
+                    bin_type = 'non-biodegradable'
+                bot.reply_to(message, 'Bin type {} successfully set!'.format(bin_type))
+
             else:
                 bot.reply_to(message, "Error")
                 print db.posts.find_one({"C_ID": str(message.from_user.id)})
-        except:
-            bot.reply_to(message, "Error")
+        except Exception as e:
+            bot.reply_to(message, e)
 
     @bot.message_handler(content_types=['location'])
     def get_location(message):
@@ -102,8 +128,8 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
             if not db.posts.find_one({"C_ID": str(message.from_user.id)}) is None:
                 posts = db.posts
                 location_lat, location_long = message.location.latitude, message.location.longitude
-                posts.update_one({'C_ID': str(message.from_user.id)}, {"$set": {"LAT": location_lat}})
-                posts.update_one({'C_ID': str(message.from_user.id)}, {"$set": {"LONG": location_long}})
+                posts.update_many({'C_ID': str(message.from_user.id)}, {"$set": {"LAT": location_lat}})
+                posts.update_many({'C_ID': str(message.from_user.id)}, {"$set": {"LONG": location_long}})
                 # dump(config_dict, open('config.p', 'wb'))
                 bot.reply_to(message, text['location_received'].format(location_lat, location_long))
             else:
