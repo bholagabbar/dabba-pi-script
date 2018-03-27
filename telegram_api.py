@@ -67,7 +67,7 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
     def reset(message):
         try:
             posts = db.posts
-            posts.delete_one({"C_ID": str(message.from_user.id)})
+            posts.delete_many({"C_ID": str(message.from_user.id)})
             bot.reply_to(message, "Reset successfully")
         except:
             bot.reply_to(message, "Error")

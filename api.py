@@ -33,3 +33,17 @@ def get_type(macID):
     bin_type = posts.find_one({"U_ID":str(macID)})['TYPE']
     client.close()
     return bin_type
+
+def confirm_authentication(macID):
+    client = getMongoClient()
+    telegram_db = client.telegram_db
+    posts = telegram_db.posts
+    result = posts.find_one({"U_ID":str(macID)})
+    client.close()
+    try:
+        if (result['LAT'] is not None) and (result['LON'] is not None) and (result['TYPE'] is not None):
+            return False
+        else:
+            return True
+    except:
+        return True
