@@ -54,6 +54,7 @@ class Pi:
 		lat, lon = api.get_location(self.U_ID)
 		self.config_dict["LAT"], self.config_dict["LONG"] = lat, lon
 		self.config_dict["USER_NAME"] = api.get_username(self.U_ID)
+		self.config_dict["TYPE"] = api.get_type(self.U_ID)
 		dump(self.config_dict, open('config.p', 'wb'))
 		#Dict_to_API used to send API requests
 		self.dict_to_API = dict()
@@ -61,6 +62,7 @@ class Pi:
 		self.dict_to_API.update({"LAT":self.config_dict["LAT"]})
 		self.dict_to_API.update({"LONG":self.config_dict["LONG"]})
 		self.dict_to_API.update({"USER_NAME":self.config_dict["USER_NAME"]})
+		self.dict_to_API.update({"TYPE": self.config_dict["TYPE"]})
 
 		i = 0
 		while True:
