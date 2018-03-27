@@ -88,8 +88,14 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
             [mac_id, bin_type] = message.text.split(' ')
             if int(bin_type) not in [0,1]:
                 raise ValueError
+            if db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(int(mac_id))}) is None \
+                    and db.posts.find_one({"U_ID": str(int(mac_id))}) is None\
+                    and db.posts.find_one({"C_ID": str(message.from_user.id)})["U_ID"] is None:
+                posts = db.posts
+                posts.update_one({"C_ID": str(message.from_user.id), "U_ID": None}, {"$set": {"U_ID":str(int(mac_id))}})
 
-            if db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(int(mac_id))}) is None and db.posts.find_one({"U_ID": str(int(mac_id))}) is None:
+            elif db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(int(mac_id))}) is None \
+                    and db.posts.find_one({"U_ID": str(int(mac_id))}) is None:
                 posts = db.posts
                 post = {"C_ID": str(message.from_user.id),
                         "USER_NAME": str(message.from_user.username),
