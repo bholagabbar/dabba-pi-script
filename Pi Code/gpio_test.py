@@ -7,7 +7,7 @@ gp.setup(23, gp.OUT)
 gp.setup(24, gp.IN)
 gp.setwarnings(False)
 
-whlie True:
+while True:
 	gp.output(23, True)
 	time.sleep(0.00001)
 	gp.output(23, False)
