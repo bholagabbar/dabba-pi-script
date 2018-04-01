@@ -14,6 +14,7 @@ from pre_processing import pre_processing
 # Custom Modules
 from sonar_module import sound_sensor
 from vision_module import get_tags
+import api
 
 
 # from clarifai_module import get_tags
@@ -33,6 +34,17 @@ class Pi:
 		gp.setup(24, gp.IN)
 		gp.setwarnings(False)
 
+		try:
+			with open(os.path.dirname(os.path.realpath(__file__)) + '/config.json') as json_config_file:
+			config = json.load(json_config_file)
+
+			for k, v in config.iteritems():
+			os.environ[k] = v
+
+# Config file not passed! Using defaults in local
+		except Exception as e:
+			logging.warning('Config file not found. Using defaults with CHARTS_DB_HOST as %s' % (os.environ.get('CHARTS_DB_HOST', None)))
+
 	#Config Files
 
 
@@ -49,6 +61,7 @@ class Pi:
 
 
 		while not api.confirm_authentication(self.U_ID):
+			print "L"
 			pass
 
 		lat, lon = api.get_location(self.U_ID)
