@@ -1,6 +1,6 @@
 import os
 from pickle import load
-
+import json
 import telebot
 from pymongo import MongoClient
 from telebot import types
@@ -25,10 +25,10 @@ status = types.KeyboardButton('/status')
 markup.row(start, location)
 markup.row(reset, status)
 
-token = "506400947:AAFaKrX-EFVhM-O1e6rV5XyWMzVWtMB1Wdo"
+token = os.environ['KEY']
 
 bot = telebot.TeleBot(token)
-async_bot = telebot.AsyncTeleBot(token)
+# async_bot = telebot.AsyncTeleBot(token)
 config_dict = dict()
 
 class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
