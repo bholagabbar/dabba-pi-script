@@ -1,4 +1,5 @@
 import requests
+import os
 from pymongo import MongoClient
 
 def getMongoClient():
@@ -6,15 +7,17 @@ def getMongoClient():
     port = 27017
     return MongoClient(host, port) #add params
 
-def send_to_API(data):
+def send_data(data):
     URL = "http://dabba.us-west-2.elasticbeanstalk.com/bins/"
     r = requests.post(URL, data)
+    print r
 
 def get_username(macID):
     client = getMongoClient()
-    admin = client.admin
-    posts = admin.posts
-    username = posts.find_one({"U_ID": str(macID)})['USER_NAME']
+    telegram_db = client.telegram_db
+    posts = telegram_db.posts
+    print posts
+    username = posts.find_one({"U_ID": macID})['USER_NAME']
     client.close()
     return username
 
@@ -22,29 +25,39 @@ def get_location(macID):
     client = getMongoClient()
     telegram_db = client.telegram_db
     posts = telegram_db.posts
-    lat = posts.find_one({"U_ID": str(macID)})['LAT']
-    lon = posts.find_one({"U_ID": str(macID)})['LONG']
+    print posts.find({})[0]
+    print macID
+    lat = posts.find_one({"U_ID": macID})['LAT']
+    lon = posts.find_one({"U_ID": macID})['LONG']
     client.close()
-    return lat, lon
+    return str(lat), str(lon)
 
 def get_type(macID):
     client = getMongoClient()
     telegram_db = client.telegram_db
     posts = telegram_db.posts
-    bin_type = posts.find_one({"U_ID":str(macID)})['TYPE']
+    bin_type = posts.find_one({"U_ID":macID})['TYPE']
     client.close()
     return bin_type
 
 def confirm_authentication(macID):
+    print macID
     client = getMongoClient()
     telegram_db = client.telegram_db
     posts = telegram_db.posts
-    result = posts.find_one({"U_ID":str(macID)})
+    result = posts.find_one({"U_ID":macID})
+    print result
+    print result['LAT']
+    print result['LONG']
+    print result['TYPE']
     client.close()
     try:
-        if (result['LAT'] is not None) and (result['LONG'] is not None) and (result['TYPE'] is not None):
+        if (result['LAT'] != None) and (result['LONG'] != None) and (result['TYPE'] != None):
+            print "1"
             return False
         else:
+            print "2"
             return True
     except:
+        print "3"
         return True

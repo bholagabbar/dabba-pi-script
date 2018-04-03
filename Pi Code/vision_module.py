@@ -1,6 +1,6 @@
 def get_tags(client, types, image):
     # Loads the image into memory
-    with io.open(image, 'rb') as image_file:
+    with open(image, 'rb') as image_file:
         content = image_file.read()
 
     image = types.Image(content=content)

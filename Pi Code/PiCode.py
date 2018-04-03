@@ -1,8 +1,10 @@
+import logging
 import datetime
 import os
 from pickle import dump
 from time import sleep
 from uuid import getnode as get_mac
+import json
 
 import RPi.GPIO as gp
 from dropbox import Dropbox
@@ -35,14 +37,15 @@ class Pi:
 		gp.setwarnings(False)
 
 		try:
-			with open(os.path.dirname(os.path.realpath(__file__)) + '/config.json') as json_config_file:
-			config = json.load(json_config_file)
+			with open('config.json','r') as json_config_file:
+				config = json.loads(json_config_file.read())
 
 			for k, v in config.iteritems():
-			os.environ[k] = v
-
+				os.environ[k] = v
+			print os.environ['CHARTS_DB_HOST']
 # Config file not passed! Using defaults in local
 		except Exception as e:
+			print e
 			logging.warning('Config file not found. Using defaults with CHARTS_DB_HOST as %s' % (os.environ.get('CHARTS_DB_HOST', None)))
 
 	#Config Files
@@ -55,12 +58,13 @@ class Pi:
 		#self.config_dict = load(open('config.p', 'rb'))
 		self.config_dict = dict()
 		self.init_dist = sound_sensor()
+		print self.init_dist
 		self.U_ID = str(get_mac())
 		self.config_dict.update({"U_ID":self.U_ID})
 		self.config_dict.update({"DEPTH":self.init_dist})
 
 
-		while not api.confirm_authentication(self.U_ID):
+		while api.confirm_authentication(self.U_ID):
 			print "L"
 			pass
 
@@ -88,7 +92,7 @@ class Pi:
 			print "Sleeping for 5 seconds"
 			sleep(5) #Maybe 30 secs? CHANGE TO 15 for review
 
-			self.dict_to_API.update({"LEVEL":self.config_dict['DEPTH'] - dist})
+			self.dict_to_API.update({"LEVEL":int(self.config_dict['DEPTH'] - dist)})
 			self.dict_to_API.update({"TIMESTAMP":str(datetime.datetime.now())})
 
 			print "Getting Tags (Experimantal)"
@@ -107,4 +111,4 @@ class Pi:
 			print ""
 			print ""
 			i = (i + 1) % 2
-			# api.send_data(json.dumps(self.dict_to_API))
+			api.send_data(json.dumps(self.dict_to_API))
