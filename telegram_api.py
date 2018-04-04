@@ -11,8 +11,7 @@ with open('config.json', 'r') as json_config_file:
 for k, v in configFile.iteritems():
     os.environ[k] = v
 
-client = MongoClient(host=os.environ['HOST'], port=int(os.environ['PORT']),
-                     username=os.environ['USER'], password=os.environ['PASS'])
+client = MongoClient(os.environ['CHARTS_DB_HOST'], 27017)
 # client = MongoClient()
 db = client.telegram_db
 text = load(open('text.txt', 'rb'))
@@ -25,7 +24,7 @@ status = types.KeyboardButton('/status')
 markup.row(start, location)
 markup.row(reset, status)
 
-token = os.environ['KEY']
+token = os.environ['TELEGRAM_KEY']
 
 bot = telebot.TeleBot(token)
 # async_bot = telebot.AsyncTeleBot(token)
@@ -92,7 +91,7 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
                     and db.posts.find_one({"U_ID": str(mac_id)}) is None\
                     and db.posts.find_one({"C_ID": str(message.from_user.id)})["U_ID"] is None:
                 posts = db.posts
-                posts.update_one({"C_ID": str(message.from_user.id), "U_ID": None}, {"$set": {"U_ID":str(mac_id), "TYPE":int(bin_type)}})
+                posts.update_one({"C_ID": str(message.from_user.id), "U_ID": None}, {"$set": {"U_ID":str(mac_id), "TYPE":str(bin_type)}})
                 bot.reply_to(message,
                              "MAC ID {} and bin type {} successfully set! Be sure to send your location again!".format(
                                  mac_id, 'non biodegradable' if int(bin_type) else 'biodegradable'))
@@ -106,7 +105,7 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
                         "LAT": None,
                         "LONG": None,
                         "URL": None,
-                        "TYPE": int(bin_type)}
+                        "TYPE": str(bin_type)}
                 posts.insert_one(post)
                 bot.reply_to(message, "MAC ID {} and bin type {} successfully set! Be sure to send your location again!".format(
                     mac_id, 'non biodegradable' if int(bin_type) else 'biodegradable'))
@@ -117,7 +116,7 @@ class telegram: #ADD PI-CLIENT VALIDATION TO EACH!
             elif not db.posts.find_one({"C_ID": str(message.from_user.id), "U_ID": str(mac_id)}) is None:
                 posts = db.posts
                 posts.update_one({'C_ID': str(message.from_user.id), 'U_ID': str(mac_id)},
-                                 {"$set": {'TYPE': int(bin_type)}})
+                                 {"$set": {'TYPE': str(bin_type)}})
                 for x in db.posts.find({"C_ID": str(message.from_user.id)}):
                     print x
 
