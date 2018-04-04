@@ -87,7 +87,7 @@ class Pi:
 			dist = sound_sensor()
 			image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
 			print "Capturing Image"
-			os.system("fswebcam -S 30 --no-banner -q image_{}.jpg".format(i))
+			os.system("fswebcam -r 1024x768 -S 30 --no-banner -q image_{}.jpg".format(i))
 
 			print "Sleeping for 5 seconds"
 			sleep(5) #Maybe 30 secs? CHANGE TO 15 for review
