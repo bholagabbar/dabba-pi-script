@@ -1,4 +1,5 @@
 import requests
+import json
 import os
 from pymongo import MongoClient
 
@@ -10,6 +11,12 @@ def getMongoClient():
 def send_data(data):
     URL = "http://dabba.us-west-2.elasticbeanstalk.com/bins/"
     r = requests.post(URL, data)
+    print r
+    URL = os.environ['WEB_ENDPOINT']
+    message = dict()
+    message['USER'] = 'piyush9620'
+    message['MSG'] = data
+    r = requests.post(URL, json.dumps(message))
     print r
 
 def get_username(macID):
