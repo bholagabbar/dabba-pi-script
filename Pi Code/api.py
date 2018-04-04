@@ -45,7 +45,7 @@ def get_type(macID):
     posts = telegram_db.posts
     bin_type = posts.find_one({"U_ID":macID})['TYPE']
     client.close()
-    return bin_type
+    return str(bin_type)
 
 def confirm_authentication(macID):
     print macID
