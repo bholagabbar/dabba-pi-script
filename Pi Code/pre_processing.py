@@ -1,5 +1,5 @@
 import cv2
-
+import numpy as np
 
 # image2 -> the image of the dustbin before throwing in the new garbage(object of interest)
 # image1 -> the image of the dustbin after throwing in the new garbage(object of interest)
@@ -36,7 +36,9 @@ def pre_processing(newImg, prevImg):
         canvas = np.zeros_like(image1, np.uint8)
         canvas[imask] = image1[imask]
         cv2.imwrite("send_to_vision.jpg", canvas)
-    except:
+    except Exception as e:
+	print "LOL ho gaya"
+	print e
         newImg = cv2.imread(newImg)
         cv2.imwrite('send_to_vision.jpg', newImg)
 #cv2.Copy(clrimg, clrimg, threshImage)

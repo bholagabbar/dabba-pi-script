@@ -13,6 +13,7 @@ from google.cloud.vision import types
 
 from dropbox_module import upload
 from pre_processing import pre_processing
+from get_tags_tf import get_tags_tf
 # Custom Modules
 from sonar_module import sound_sensor
 from vision_module import get_tags
@@ -70,7 +71,7 @@ class Pi:
 
 		lat, lon = api.get_location(self.U_ID)
 		self.config_dict["LAT"], self.config_dict["LONG"] = lat, lon
-		self.config_dict["USER_NAME"] = str(api.get_username(self.U_ID))
+		self.config_dict["USER_NAME"] = str(api.get_username(self.U_ID)+"_2")
 		self.config_dict["TYPE"] = api.get_type(self.U_ID)
 		dump(self.config_dict, open('config.p', 'wb'))
 		#Dict_to_API used to send API requests
@@ -85,6 +86,8 @@ class Pi:
 		while True:
 			print "Recording Distance"
 			dist = sound_sensor()
+			if dist > self.config_dict['DEPTH']:
+				continue
 			image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
 			print "Capturing Image"
 			os.system("fswebcam -r 1024x768 -S 30 --no-banner -q image_{}.jpg".format(i))
@@ -97,8 +100,9 @@ class Pi:
 
 			print "Getting Tags (Experimantal)"
 			# tags = get_tags(ClImage, self.model, 'image.jpg') THIS WAS CLARIFAI
-			pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2))
-			tags = get_tags(self.visionClient, types, 'send_to_vision.jpg'.format(i))
+			#pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2))
+			#tags = get_tags(self.visionClient, types, 'send_to_vision.jpg'.format(i))
+			tags = get_tags_tf('image_{}.jpg'.format(i))
 			self.dict_to_API.update({"TAGS":tags})
 
 			print "Uploading Image"
@@ -111,4 +115,4 @@ class Pi:
 			print ""
 			print ""
 			i = (i + 1) % 2
-			api.send_data(json.dumps(self.dict_to_API))
+			#api.send_data(json.dumps(self.dict_to_API))
