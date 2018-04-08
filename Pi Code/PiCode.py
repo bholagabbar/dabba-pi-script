@@ -99,19 +99,21 @@ class Pi:
 
             print "Getting Tags (Experimental)"
             # tags = get_tags(ClImage, self.model, 'image.jpg') THIS WAS CLARIFAI
-            pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2))
-            tags = get_tags(self.visionClient, types, 'send_to_vision.jpg')
-            # tags = get_tags_tf('image_{}.jpg'.format(i))
-            self.dict_to_API.update({"TAGS": tags})
+            if not pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2)):
+                tags = get_tags(self.visionClient, types, 'send_to_vision.jpg')
+                # tags = get_tags_tf('image_{}.jpg'.format(i))
+                self.dict_to_API.update({"TAGS": tags})
 
-            print "Uploading Image"
-            DROPBOX_URL = upload(self.dbx, "image_{}.jpg".format(i), image_name)
-            self.dict_to_API.update({"URL": DROPBOX_URL})
+                print "Uploading Image"
+                DROPBOX_URL = upload(self.dbx, "image_{}.jpg".format(i), image_name)
+                self.dict_to_API.update({"URL": DROPBOX_URL})
 
-            # print "Distance: {} cms".format(dist)
-            # print "Dropbox URL: {}".format(DROPBOX_URL)
-            print self.dict_to_API
-            print ""
-            print ""
-            i = (i + 1) % 2
-            api.send_data(json.dumps(self.dict_to_API))
+                # print "Distance: {} cms".format(dist)
+                # print "Dropbox URL: {}".format(DROPBOX_URL)
+                print self.dict_to_API
+                print ""
+                print ""
+                i = (i + 1) % 2
+                api.send_data(json.dumps(self.dict_to_API))
+            else:
+                print "Same images, no new waste."
