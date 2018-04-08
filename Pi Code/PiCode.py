@@ -69,7 +69,7 @@ class Pi:
 
         lat, lon = api.get_location(self.U_ID)
         self.config_dict["LAT"], self.config_dict["LONG"] = lat, lon
-        self.config_dict["USER_NAME"] = str(api.get_username(self.U_ID) + "_2")
+        self.config_dict["USER_NAME"] = str(api.get_username(self.U_ID))
         self.config_dict["TYPE"] = api.get_type(self.U_ID)
         dump(self.config_dict, open('config.p', 'wb'))
         # Dict_to_API used to send API requests

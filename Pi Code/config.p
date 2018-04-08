@@ -1,7 +1,7 @@
 (dp0
 S'USER_NAME'
 p1
-S'sathe_aditya_2'
+S'sathe_aditya'
 p2
 sS'LONG'
 p3
@@ -9,7 +9,7 @@ S'80.244597'
 p4
 sS'DEPTH'
 p5
-F31.63
+F32.0
 sS'LAT'
 p6
 S'12.975473'
@@ -20,6 +20,6 @@ S'202481598746694'
 p9
 sS'TYPE'
 p10
-S'0'
+S'1'
 p11
 s.
