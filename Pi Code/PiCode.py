@@ -84,7 +84,7 @@ class Pi:
         while True:
             print "Recording Distance"
             dist = sound_sensor()
-            if dist > self.config_dict['DEPTH']:
+            if int(dist) > self.config_dict['DEPTH']+1:
                 sleep(5)
                 continue
             image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
