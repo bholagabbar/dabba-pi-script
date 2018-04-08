@@ -7,6 +7,7 @@ import numpy as np
 # plz click images from a steady camera, else the algo wont work
 
 def pre_processing(newImg, prevImg):
+    counter = 0
     try:
         img = cv2.imread(prevImg)
         img2 = cv2.imread(newImg)
@@ -20,6 +21,7 @@ def pre_processing(newImg, prevImg):
                 dist = np.sqrt(val1 * val1 + val2 * val2 + val3 * val3)
 
                 if dist <= 45:
+                    counter += 1
                     img2[rows, cols] = [180, 130, 210]
 
         lu = np.zeros([2])
@@ -43,7 +45,7 @@ def pre_processing(newImg, prevImg):
                     rl[0] = max(rl[0], i)
                     rl[1] = max(rl[1], j)
 
-                    img2[i, j] = [255, 255, 255]
+                    # img2[i, j] = [255, 255, 255]
 
         if lu[0] - 80 >= 0:
             lu[0] -= 80
@@ -82,3 +84,6 @@ def pre_processing(newImg, prevImg):
     except:
         cv2.imwrite("send_to_vision.jpg", cv2.imread(newImg))
         print "single image found"
+    if counter >= int(480*640*0.97):
+        return True
+    return False
