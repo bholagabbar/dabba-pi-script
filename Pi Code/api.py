@@ -2,11 +2,13 @@ import requests
 import json
 import os
 from pymongo import MongoClient
+from lights import strobe
 
 def getMongoClient():
     host = os.environ.get('CHARTS_DB_HOST')
     port = 27017
-    return MongoClient(host, port) #add params
+    return MongoClient(host, port)  # add params
+
 
 def send_data(data):
     URL = "http://dabba.us-west-2.elasticbeanstalk.com/bins/"
@@ -14,8 +16,8 @@ def send_data(data):
     try:
         response = json.loads(r.content, encoding='utf-8')
         print response
-	if response['segregation'] == 'wrong':
-            print "BUZZER BUZZER BUZZER"
+        if response['segregation'] == 'wrong':
+            strobe()
     except Exception as e:
         print e
     print r
@@ -27,6 +29,7 @@ def send_data(data):
     r = requests.post(URL, json.dumps(message))
     print r
 
+
 def get_username(macID):
     client = getMongoClient()
     telegram_db = client.telegram_db
@@ -35,6 +38,7 @@ def get_username(macID):
     username = posts.find_one({"U_ID": macID})['USER_NAME']
     client.close()
     return username
+
 
 def get_location(macID):
     client = getMongoClient()
@@ -47,20 +51,22 @@ def get_location(macID):
     client.close()
     return str(lat), str(lon)
 
+
 def get_type(macID):
     client = getMongoClient()
     telegram_db = client.telegram_db
     posts = telegram_db.posts
-    bin_type = posts.find_one({"U_ID":macID})['TYPE']
+    bin_type = posts.find_one({"U_ID": macID})['TYPE']
     client.close()
     return str(bin_type)
+
 
 def confirm_authentication(macID):
     print macID
     client = getMongoClient()
     telegram_db = client.telegram_db
     posts = telegram_db.posts
-    result = posts.find_one({"U_ID":macID})
+    result = posts.find_one({"U_ID": macID})
     print result
     print result['LAT']
     print result['LONG']
