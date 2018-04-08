@@ -17,6 +17,8 @@ def send_data(data):
             print "BUZZER BUZZER BUZZER"
     except Exception as e:
         print e
+    print r
+
     URL = os.environ['WEB_ENDPOINT']
     message = dict()
     message['USER'] = 'piyush9620'
