@@ -87,7 +87,8 @@ class Pi:
 			print "Recording Distance"
 			dist = sound_sensor()
 			if dist > self.config_dict['DEPTH']:
-				continue
+                            sleep(5)
+			    continue
 			image_name = self.dict_to_API["U_ID"] + "_" + str(datetime.datetime.now()) + '.jpg'
 			print "Capturing Image"
 			os.system("fswebcam -r 1024x768 -S 30 --no-banner -q image_{}.jpg".format(i))
