@@ -8,4 +8,4 @@ def strobe(times=10, sec=1):
         time.sleep(sec)
         gp.output(18, False)
         time.sleep(sec)
-    times -= 1
+        times -= 1

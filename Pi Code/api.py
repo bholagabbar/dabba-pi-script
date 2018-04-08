@@ -17,7 +17,7 @@ def send_data(data):
         response = json.loads(r.content, encoding='utf-8')
         print response
         if response['segregation'] == 'wrong':
-            strobe()
+            strobe(50,0.1)
     except Exception as e:
         print e
     print r
