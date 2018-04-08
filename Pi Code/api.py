@@ -12,8 +12,9 @@ def send_data(data):
     URL = "http://dabba.us-west-2.elasticbeanstalk.com/bins/"
     r = requests.post(URL, data)
     try:
-        response = json.loads(r, encoding='utf-8')
-        if response['segregation'] == 'wrong':
+        response = json.loads(r.content, encoding='utf-8')
+        print response
+	if response['segregation'] == 'wrong':
             print "BUZZER BUZZER BUZZER"
     except Exception as e:
         print e
