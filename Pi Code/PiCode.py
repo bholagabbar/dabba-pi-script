@@ -91,8 +91,6 @@ class Pi:
             print "Capturing Image"
             os.system("fswebcam -r 1024x768 -S 30 --no-banner -q image_{}.jpg".format(i))
 
-            print "Sleeping for 5 seconds"
-            sleep(5)  # Maybe 30 secs? CHANGE TO 15 for review
 
             self.dict_to_API.update({"LEVEL": int(self.config_dict['DEPTH'] - dist)})
             self.dict_to_API.update({"TIMESTAMP": str(datetime.datetime.now())})
@@ -117,3 +115,13 @@ class Pi:
                 api.send_data(json.dumps(self.dict_to_API))
             else:
                 print "Same images, no new waste."
+
+            print "Sleeping for 15 seconds"
+            sleep(15)  # Maybe 30 secs? CHANGE TO 15 for review
+
+
+
+
+
+
+
