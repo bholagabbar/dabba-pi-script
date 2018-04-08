@@ -32,6 +32,7 @@ class Pi:
 
         # GPIO for SONAR Sensor
         gp.setmode(gp.BCM)
+        gp.setup(18, gp.OUT)
         gp.setup(23, gp.OUT)
         gp.setup(24, gp.IN)
         gp.setwarnings(False)

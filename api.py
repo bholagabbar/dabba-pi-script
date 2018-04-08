@@ -1,5 +1,6 @@
 import requests
 from pymongo import MongoClient
+from lights impoet strobe
 
 def getMongoClient():
     return MongoClient(host=os.environ['HOST'], port=int(os.environ['PORT']),

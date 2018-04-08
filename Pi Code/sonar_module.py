@@ -1,5 +1,5 @@
-import RPi.GPIO as gp
 import time
+import RPi.GPIO as gp
 def sound_sensor():
 	gp.output(23, True)
 	time.sleep(0.00001)
