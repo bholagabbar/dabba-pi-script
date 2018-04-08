@@ -99,9 +99,9 @@ class Pi:
 
             print "Getting Tags (Experimantal)"
             # tags = get_tags(ClImage, self.model, 'image.jpg') THIS WAS CLARIFAI
-            # pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2))
-            # tags = get_tags(self.visionClient, types, 'send_to_vision.jpg'.format(i))
-            tags = get_tags_tf('image_{}.jpg'.format(i))
+            pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2))
+            tags = get_tags(self.visionClient, types, 'send_to_vision.jpg'.format(i))
+            # tags = get_tags_tf('image_{}.jpg'.format(i))
             self.dict_to_API.update({"TAGS": tags})
 
             print "Uploading Image"
@@ -114,4 +114,4 @@ class Pi:
             print ""
             print ""
             i = (i + 1) % 2
-        # api.send_data(json.dumps(self.dict_to_API))
+            api.send_data(json.dumps(self.dict_to_API))

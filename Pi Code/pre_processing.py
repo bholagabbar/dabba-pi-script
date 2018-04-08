@@ -77,4 +77,4 @@ def pre_processing(newImg=None, prevImg=None):
         cv2.imwrite("send_to_vision.jpg", img2)
         print("image generated")
     except:
-        return newImg
+        cv2.imwrite('send_to_vision.jpg', cv2.imread(newImg))
