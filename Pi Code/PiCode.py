@@ -97,10 +97,10 @@ class Pi:
             self.dict_to_API.update({"LEVEL": int(self.config_dict['DEPTH'] - dist)})
             self.dict_to_API.update({"TIMESTAMP": str(datetime.datetime.now())})
 
-            print "Getting Tags (Experimantal)"
+            print "Getting Tags (Experimental)"
             # tags = get_tags(ClImage, self.model, 'image.jpg') THIS WAS CLARIFAI
             pre_processing("image_{}.jpg".format(i), "image_{}.jpg".format((i+1)%2))
-            tags = get_tags(self.visionClient, types, 'send_to_vision.jpg'.format(i))
+            tags = get_tags(self.visionClient, types, 'send_to_vision.jpg')
             # tags = get_tags_tf('image_{}.jpg'.format(i))
             self.dict_to_API.update({"TAGS": tags})
 

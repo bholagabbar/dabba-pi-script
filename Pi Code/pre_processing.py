@@ -10,6 +10,8 @@ def pre_processing(newImg=None, prevImg=None):
     try:
         img = cv2.imread(prevImg)
         img2 = cv2.imread(newImg)
+        if img == img2:
+            cv2.imwrite('send_to_vision.jpg', img2)
         rowst, colst, channel = img.shape
         for rows in range(rowst):
             for cols in range(colst):
